@@ -1,51 +1,44 @@
 bundle:
-name: batch_inference_bundle
+  name: batch_inference_bundle
 
 workspace:
-host: https://https://adb-160277800306131.11.azuredatabricks.net # e.g. https://adb-123456789.2.azuredatabricks.net
-file_path: /Workspace/Users/${workspace.current_user.userName}/batch-inference-bundle
+  host: https://adb-3663190007330585.5.azuredatabricks.net
+  file_path: /Workspace/Users/${workspace.current_user.userName}/batch-inference-bundle
 
 targets:
-dev:
-default: true
-workspace:
-host: ${workspace.host}
-root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/dev
-resources:
-jobs:
-batch_inference_job:
-name: batch_inference_job-${bundle.target}
-trigger:
-periodic:
-interval: 1
-unit: HOURS
-job_clusters:
-- job_cluster_key: batch_job_cluster
-new_cluster:
-num_workers: 1
-spark_version: 14.3.x-scala2.12
-node_type_id: Standard_DS3_v2
-autotermination_minutes: 20
-tasks:
-- task_key: ingest_raw
-job_cluster_key: batch_job_cluster
-notebook_task:
-notebook_path: ${workspace.file_path}/src/notebooks/01_ingest_raw.py
-source: WORKSPACE
-- task_key: feature_engineering
-depends_on:
-- task_key: ingest_raw
-job_cluster_key: batch_job_cluster
-notebook_task:
-notebook_path: ${workspace.file_path}/src/notebooks/02_feature_engineering.py
-source: WORKSPACE
-- task_key: batch_inference
-depends_on:
-- task_key: feature_engineering
-job_cluster_key: batch_job_cluster
-notebook_task:
-notebook_path: ${workspace.file_path}/src/notebooks/03_batch_inference.py
-source: WORKSPACE
+  dev:
+    default: true
+    workspace:
+      host: https://adb-3663190007330585.5.azuredatabricks.net
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/dev
+    resources:
+      jobs:
+        batch_inference_job:
+          name: batch_inference_job-${bundle.target}
+          trigger:
+            periodic:
+              interval: 12
+              unit: HOURS
+          tasks:
+            - task_key: ingest_raw
+              existing_cluster_id: 1201-072204-0994tuor
+              notebook_task:
+                notebook_path: ${workspace.file_path}/src/notebooks/01_ingest_raw
+                source: WORKSPACE
+            - task_key: feature_engineering
+              depends_on:
+                - task_key: ingest_raw
+              existing_cluster_id: 1201-072204-0994tuor
+              notebook_task:
+                notebook_path: ${workspace.file_path}/src/notebooks/02_feature_engineering
+                source: WORKSPACE
+            - task_key: batch_inference
+              depends_on:
+                - task_key: feature_engineering
+              existing_cluster_id: 1201-072204-0994tuor
+              notebook_task:
+                notebook_path: ${workspace.file_path}/src/notebooks/03_batch_inference
+                source: WORKSPACE
 
 sync:
   paths:
