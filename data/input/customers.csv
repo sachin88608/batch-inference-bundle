@@ -1,0 +1,11 @@
+customer_id,age,income,region,tenure_months,is_active
+1,25,35000,North,12,1
+2,40,80000,West,60,1
+3,31,45000,East,24,0
+4,50,120000,South,84,1
+5,29,52000,North,18,0
+6,46,90000,West,72,1
+7,37,61000,East,30,1
+8,55,130000,South,96,1
+9,33,47000,North,20,0
+10,42,76000,West,54,1
