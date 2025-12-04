@@ -15,10 +15,12 @@ targets:
       jobs:
         batch_inference_job:
           name: batch_inference_job-${bundle.target}
-          trigger:
-            periodic:
-              interval: 12
-              unit: HOURS
+          run_as:
+            user_name: sachingupta88608_gmail.com#ext#@sachingupta88608gmail.onmicrosoft.com
+          schedule:
+            quartz_cron_expression: "0 0 */12 * * ?"
+            timezone_id: "Asia/Kolkata"
+            pause_status: PAUSED  # or PAUSED/UNPAUSED, as needed
           tasks:
             - task_key: ingest_raw
               existing_cluster_id: 1201-072204-0994tuor
